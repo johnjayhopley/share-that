@@ -208,7 +208,7 @@ export default class ShareThat {
       id: `st-${index}`,
       innerHTML: `
         <a href="#" title="${option}" class="share-that" data-share-type="${option}">
-          <img src="${icon}" alt="${option} share link" alt="share on ${option}">
+          <img src="${icon}" share link" alt="share on ${option}">
         </a>
         `
     });
