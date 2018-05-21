@@ -1,8 +1,10 @@
 /**
  * ShareThat
- * @version 1.0
+ * @version 1.0.1
  * @author John Hopley <jhopley@readingroom.com>
  */
+
+import './closest-pollyfill';
 
 /**
  * Object#assignRecursive - protopal method for deep mergin objects (recursive)
@@ -11,8 +13,8 @@
  * @return Object
  */
 Object.assignRecursive = function(original, ...target) {
-  if (!target.length) { 
-    return original 
+  if (!target.length) {
+    return original
   };
 
   const source = target.shift();
@@ -23,7 +25,7 @@ Object.assignRecursive = function(original, ...target) {
   if (isObject(original) && isObject(source)) {
     for (const key in source) {
       if (isObject(source[key])) {
-        if (!original[key]) { 
+        if (!original[key]) {
           Object.assign(original, { [key]: {} });
         }
         Object.assignRecursive(original[key], source[key]);
@@ -50,12 +52,12 @@ const pinterestBaseUrl = 'https://pinterest.com/pin/create/button/';
 export default class ShareThat {
 
   /**
-   * ShareThat#constructor() - instantiates module and 
+   * ShareThat#constructor() - instantiates module and
    * deep merges custom module settings with default settings
    * @constructor
-   * @param {String} selector 
+   * @param {String} selector
    * @param {Object} settings
-   * @returns void 
+   * @returns void
    */
   constructor(selector = false, settings = {}) {
     this.defaultSettings = {
@@ -94,7 +96,7 @@ export default class ShareThat {
             title: null,
             summary: null,
             source: null
-          }                             
+          }
         },
         pinterest: {
           active: true,
@@ -106,7 +108,7 @@ export default class ShareThat {
           }
         }
       },
-      
+
       closeIcon: cdnCloseIcon
     }
 
@@ -116,12 +118,13 @@ export default class ShareThat {
 
     this.settings = Object.assignRecursive({}, this.defaultSettings, settings);
     this.selector = selector;
+
     this.initialise();
   }
 
   /**
-   * ShareThat#initialise() - initialises the module functionality - 
-   * selects all elements by the selector and generates 
+   * ShareThat#initialise() - initialises the module functionality -
+   * selects all elements by the selector and generates
    * the corresponding mark up for each instance.
    * @protected
    * @returns void
@@ -133,7 +136,7 @@ export default class ShareThat {
     if(!query.length) {
       return;
     }
-    
+
     [].forEach.call(query, (element) => {
       elements.push(this.generate(element));
     });
@@ -162,12 +165,12 @@ export default class ShareThat {
 
     if(!this.settings.inline) {
       ul.style.display = 'none';
-      ul.appendChild(this.createShareItem('close', 0));      
+      ul.appendChild(this.createShareThatem('close', 0));
     }
 
     for(let option in this.settings.shareWith) {
       if(this.settings.shareWith[option].active) {
-        ul.appendChild(this.createShareItem(option, index));
+        ul.appendChild(this.createShareThatem(option, index));
         index++;
       }
     }
@@ -194,7 +197,7 @@ export default class ShareThat {
    * @protected
    * @returns Node
    */
-  createShareItem(option, index) {
+  createShareThatem(option, index) {
     let icon;
 
     if(option === 'close') {
@@ -217,7 +220,7 @@ export default class ShareThat {
   }
 
   /**
-   * ShareThat#toggleOpen() - toggles display on when 
+   * ShareThat#toggleOpen() - toggles display on when
    * settings.inline is set to false
    * @protected
    * @returns void
@@ -225,7 +228,7 @@ export default class ShareThat {
   toggleOpen(element) {
     let target = element.closest('.share-that-container');
     ShareThat.toggleClass(target, 'active');
-    ShareThat.toggleDisplay(target.querySelector('.share-that__list'));  
+    ShareThat.toggleDisplay(target.querySelector('.share-that__list'));
     ShareThat.toggleDisplay(target.querySelector('.share-that--open'));
   }
 
@@ -243,14 +246,14 @@ export default class ShareThat {
       ShareThat.on([open, close], 'click', function(event) {
         event.preventDefault();
         _instance.toggleOpen(event.currentTarget);
-      });      
+      });
     }
 
     this.share();
   }
 
   /**
-   * ShareThat#share() - dispatches share events for 
+   * ShareThat#share() - dispatches share events for
    * all active settings.shareWith properties
    * @protected
    * @returns void
@@ -271,8 +274,8 @@ export default class ShareThat {
 
       if(this.settings.shareWith.facebook.props.popup) {
          let shareWindow = window.open(
-          url, 
-          'share-that-popup', 
+          url,
+          'share-that-popup',
           `height=${this.settings.shareWith.facebook.props.height},
           width=${this.settings.shareWith.facebook.props.width}`
         );
@@ -292,7 +295,7 @@ export default class ShareThat {
   }
 
   /**
-   * ShareThat#generateUrl() - generates Url using the 
+   * ShareThat#generateUrl() - generates Url using the
    * provided type and the corresponding props
    * all active settings.shareWith properties
    * @protected
@@ -346,8 +349,8 @@ export default class ShareThat {
   };
 
   /**
-   * ShareThat#dataLayer() - if settings.dataLayer is 
-   * set to true then we push our user events into 
+   * ShareThat#dataLayer() - if settings.dataLayer is
+   * set to true then we push our user events into
    * the window.dataLayer object if it is present.
    * @param {String} elementType
    * @param {Object} settings
@@ -359,8 +362,8 @@ export default class ShareThat {
       window.dataLayer.push({
         "event": "socialShare",
         "socialNetwork": type,
-        "currentPage": document.URL 
-      });      
+        "currentPage": document.URL
+      });
     }
   }
 
@@ -381,7 +384,7 @@ export default class ShareThat {
   }
 
   /**
-   * ShareThat#on() - creates event multiple listeners 
+   * ShareThat#on() - creates event multiple listeners
    * @param {Array} elements
    * @param {String} eventType
    * @param {Function} callback
@@ -393,17 +396,17 @@ export default class ShareThat {
       elements = [elements];
     }
 
-    elements.forEach((elementGroup, index) => {
-      elementGroup.forEach((element, index) => {
+    [].forEach.call(elements,(elementGroup, index) => {
+      [].forEach.call(elementGroup,(element, index) => {
         element.addEventListener(eventType, function(event) {
           callback(event);
-        })
-      })
-    })
+        });
+      });
+    });
   }
 
   /**
-   * ShareThat#toggleClass() - toggles node class 
+   * ShareThat#toggleClass() - toggles node class
    * @param {Node} element
    * @param {String} className
    * @static
@@ -424,7 +427,7 @@ export default class ShareThat {
   }
 
   /**
-   * ShareThat#toggleDisplay() - toggles style.display 
+   * ShareThat#toggleDisplay() - toggles style.display
    * @param {Node} element
    * @static
    * @returns void
