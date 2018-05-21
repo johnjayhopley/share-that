@@ -1,0 +1,19 @@
+{
+  "name": "@jhopley/share-that",
+  "version": "1.0.1",
+  "description": "ReadingRoom share-that module",
+  "main": "share-that.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://john_hopley@bitbucket.org/rippleffect/share-that.git"
+  },
+  "keywords": [
+    "share-that share readingroom"
+  ],
+  "author": "John Hopley",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/rippleffect/share-it#readme"
+}
